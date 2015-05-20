@@ -142,27 +142,33 @@ void setPoint() {
   setRegisterPin(DP, HIGH);
 }
 
+int pinButton = 2;
 void setup() {
   // setup code here, to run once:
   pinMode(SER_Pin, OUTPUT);
   pinMode(RCLK_Pin, OUTPUT);
   pinMode(SRCLK_Pin, OUTPUT);
   
+  pinMode(pinButton, INPUT);
+  
   // Reset tous les pins du 74HC595
   clearRegisters();
   writeRegisters();
+  Serial.begin(9600);
 }
 
 int j = 0;
 
 void loop() {
   // main code here, to run repeatedly:
+  if (digitalRead(pinButton) == LOW) {
+    clearRegisters();
+    j = millis() % 9;
+  }
+  Serial.println(j);
   setNumber(j);
   writeRegisters(); // Doit etre execute pour appliquer les changements
   // Executer seulement une fois que toutes les valeurs ont ete enregistrees
   delay(500);
-  clearRegisters();
-  j++;
-  if (j>10)
-    j = 0;
+  
 }
